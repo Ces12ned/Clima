@@ -13,6 +13,7 @@ class WeatherViewController: UIViewController {
   
     @IBOutlet weak var conditionImageView: UIImageView!
     @IBOutlet weak var temperatureLabel: UILabel!
+    @IBOutlet weak var temperatureDescriptionLabel: UILabel!
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var searchTextField: UITextField!
     @IBOutlet weak var locationWeatherButton: UIButton!
@@ -31,6 +32,9 @@ class WeatherViewController: UIViewController {
         
         weatherManager.delegate = self
         searchTextField.delegate = self
+        searchTextField.clipsToBounds = true
+        searchTextField.layer.cornerRadius = 18
+        
     }
     
     
@@ -87,9 +91,10 @@ extension WeatherViewController: WeatherManagerDelegate{
     
     func didUpdateWeather(_ weatherManager: WeatherManager,_ weather: WeatherModel){
         DispatchQueue.main.sync {
-            self.temperatureLabel.text = weather.temperatureString
+            self.temperatureLabel.text = weather.temperatureString(temp: weather.temperature)
             self.conditionImageView.image = UIImage(systemName: weather.conditionName)
             self.cityLabel.text = weather.cityName
+            self.temperatureDescriptionLabel.text = "\(weather.temperatureString(temp: weather.maxTemp))° / \(weather.temperatureString(temp: weather.minTemp))° Feels like \(weather.temperatureString(temp: weather.feelsTempt))°"
         }
         
     }
